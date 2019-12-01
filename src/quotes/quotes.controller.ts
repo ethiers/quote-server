@@ -12,24 +12,24 @@ export class QuotesController {
     }
 
     @Get()
-    getQuotes(): Quote[] {
+    getQuotes(): Promise<Quote[]> {
         return this.quotesService.getQuotes();
     }
 
     @ApiImplicitParam({name: 'id'})
     @Get(':id')
-    getQuote(@Param('id') id: string): Quote {
+    getQuote(@Param('id') id: string): Promise<Quote> {
         return this.quotesService.getQuote(id);
     }
 
     @Post()
-    createQuote(@Body() createQuoteDto: CreateQuoteDto): Quote {
+    createQuote(@Body() createQuoteDto: CreateQuoteDto): Promise<Quote> {
         return this.quotesService.createQuote(createQuoteDto);
     }
 
     @ApiImplicitParam({name: 'id'})
     @Put(':id')
-    updateQuote(@Param('id') id: string, @Body() updateQuoteDto: CreateQuoteDto): Quote {
+    updateQuote(@Param('id') id: string, @Body() updateQuoteDto: CreateQuoteDto): Promise<Quote> {
         return this.quotesService.updateQuote(id, updateQuoteDto);
     }
 
