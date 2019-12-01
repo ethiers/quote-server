@@ -12,7 +12,7 @@ import {ConfigService} from './config/config.service';
     imports: [MongooseModule.forRootAsync({
         imports: [ConfigModule],
         useFactory: async (configService: ConfigService) => ({
-            uri: configService.get('MONGO_URI'),
+            uri: process.env.MONGO_URI || configService.get('MONGO_URI'),
         }),
         inject: [ConfigService],
     }), QuotesModule, ConfigModule],
