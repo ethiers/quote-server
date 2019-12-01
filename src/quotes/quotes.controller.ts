@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, HttpService, HttpStatus, Logger, Param, Post, Put} from '@nestjs/common';
 import {QuotesService} from './quotes.service';
 import {CreateQuoteDto} from './dto/create-quote.dto';
 import {Quote} from './interfaces/quote.interface';
@@ -13,18 +13,24 @@ export class QuotesController {
 
     @Get()
     getQuotes(): Promise<Quote[]> {
+        Logger.log('New Quotes API request');
         return this.quotesService.getQuotes();
     }
 
     @ApiImplicitParam({name: 'id'})
     @Get(':id')
     getQuote(@Param('id') id: string): Promise<Quote> {
+        Logger.log('New Quotes API request', id);
         return this.quotesService.getQuote(id);
     }
 
     @Post()
-    createQuote(@Body() createQuoteDto: CreateQuoteDto): Promise<Quote> {
-        return this.quotesService.createQuote(createQuoteDto);
+    async createQuote(@Body() createQuoteDto: CreateQuoteDto): Promise<Quote> {
+        try {
+            return await this.quotesService.createQuote(createQuoteDto);
+        } catch (err) {
+            throw new HttpException(err.message, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     @ApiImplicitParam({name: 'id'})

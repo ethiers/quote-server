@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {Quote} from './interfaces/quote.interface';
 import {Model} from 'mongoose';
 import {InjectModel} from '@nestjs/mongoose';
@@ -16,7 +16,12 @@ export class QuotesService {
     }
 
     async getQuote(id: string): Promise<Quote> {
-        return await this.quoteModel.findById(id).exec();
+        try {
+            return await this.quoteModel.findById(id).exec();
+        } catch (err) {
+            throw new HttpException('Quotes Not Found', HttpStatus.NOT_FOUND);
+        }
+
     }
 
     async createQuote(quote: Quote): Promise<Quote> {
