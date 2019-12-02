@@ -11,9 +11,15 @@ import {ConfigService} from './config/config.service';
 
     imports: [MongooseModule.forRootAsync({
         imports: [ConfigModule],
-        useFactory: async (configService: ConfigService) => ({
-            uri: process.env.MONGO_URI || configService.get('MONGO_URI'),
-        }),
+        useFactory: async (configService: ConfigService) => {
+            console.log('MONGO_URI=', process.env.MONGO_URI);
+            return ({
+                uri: process.env.MONGO_URI || configService.get('MONGO_URI'),
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                useFindAndModify: false,
+            });
+        },
         inject: [ConfigService],
     }), QuotesModule, ConfigModule],
     controllers: [AppController],
